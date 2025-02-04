@@ -26,6 +26,8 @@ class GameApp : SDLApp
 	bool mHasShot;
 	bool mPaused;
 
+	bool m_shouldSpawnEnemies = false;
+
 	public this()
 	{
 		gGameApp = this;
@@ -60,6 +62,41 @@ class GameApp : SDLApp
 		DrawString(mFont, x, y, str, color, centerX);
 	}
 
+	public override void Update()
+	{
+		if (mPaused)
+			return;
+
+		base.Update();
+
+		HandleInputs();
+
+		if (m_shouldSpawnEnemies)
+		{
+			SpawnEnemies();
+
+			// Make the game harder over time
+			mDifficulty += 0.0001f;
+		}
+
+		// Scroll the background
+		mBkgPos += 0.6f;
+		if (mBkgPos > 1024)
+			mBkgPos -= 1024;
+
+		for (let entity in mEntities)
+		{
+			entity.mUpdateCnt++;
+			entity.Update();
+			if (entity.mIsDeleting)
+			{
+				// '@entity' refers to the enumerator itself
+	            @entity.Remove();
+				delete entity;
+			}
+		}
+	}
+
 	public override void Draw()
 	{
 		Draw(Images.sSpaceImage, 0, mBkgPos - 1024);
@@ -70,7 +107,7 @@ class GameApp : SDLApp
 
 		DrawString(8, 4, scope String()..AppendF("SCORE: {}", mScore), .(64, 255, 64, 255));
 
-		if ((!mHasMoved) || (!mHasShot))
+		if (!m_shouldSpawnEnemies)
 			DrawString(mWidth / 2, 200, "Use cursor keys to move and Space to fire", .(255, 255, 255, 255), true);
 	}
 
@@ -129,6 +166,11 @@ class GameApp : SDLApp
 			AddEntity(bullet);
 			PlaySound(Sounds.sLaser, 0.1f);
 		}
+
+		if (mHasMoved && mHasShot)
+		{
+			m_shouldSpawnEnemies = true;
+		}
 	}
 
 	void SpawnSkirmisher()
@@ -166,37 +208,6 @@ class GameApp : SDLApp
 
 		if (mRand.NextDouble() < 0.0005f * spawnScale)
 			SpawnGoliath();
-	}
-
-	public override void Update()
-	{
-		if (mPaused)
-			return;
-
-		base.Update();
-
-		HandleInputs();
-		SpawnEnemies();
-
-		// Make the game harder over time
-		mDifficulty += 0.0001f;
-
-		// Scroll the background
-		mBkgPos += 0.6f;
-		if (mBkgPos > 1024)
-			mBkgPos -= 1024;
-
-		for (var entity in mEntities)
-		{
-			entity.mUpdateCnt++;
-			entity.Update();
-			if (entity.mIsDeleting)
-			{
-				// '@entity' refers to the enumerator itself
-                @entity.Remove();
-				delete entity;
-			}
-		}
 	}
 
 	// Sample tests
