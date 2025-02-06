@@ -32,11 +32,11 @@ public static class Drawing
 		SDL2.SDL.RenderCopyF(Engine.Renderer.SDLRenderer, image.mTexture, &srcRect, &destRect);
 	}
 
-	public static void DrawImageRec(Image image, SDL2.SDL.Rect srcRect, SDL2.SDL.Rect destRect)
+	public static void DrawImageRec(Image image, Rect srcRect, Rect destRect)
 	{
-		var srcRect;
-		var destRect;
-		SDL2.SDL.RenderCopy(Engine.Renderer.SDLRenderer, image.mTexture, &srcRect, &destRect);
+		SDL2.SDL.Rect srcRectSDL = srcRect;
+		SDL2.SDL.Rect destRectSDL = destRect;
+		SDL2.SDL.RenderCopy(Engine.Renderer.SDLRenderer, image.mTexture, &srcRectSDL, &destRectSDL);
 	}
 
 	public static void DrawString(Font font, float x, float y, String str, Color color, bool centerX = false)

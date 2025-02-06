@@ -1,5 +1,6 @@
 using SpaceGameEngine;
 using SpaceGameEngine.Graphics;
+using SpaceGameEngine.Math;
 
 namespace SpaceGame;
 
@@ -27,14 +28,14 @@ class Hero : Entity
 		float y = Y - 41;
 		Image image = Images.sHero;
 
-		SDL2.SDL.Rect srcRect = .(0, 0, image.mWidth, image.mHeight);
-		SDL2.SDL.Rect destRect = .((int32)x, (int32)y, image.mWidth, image.mHeight);
+		Rect srcRect = .(0, 0, image.mWidth, image.mHeight);
+		Rect destRect = .((int32)x, (int32)y, image.mWidth, image.mHeight);
 
 		if (mIsMovingX)
 		{
-			int32 inset = (.)(srcRect.w * 0.09f);
+			int32 inset = (.)(srcRect.width * 0.09f);
 			destRect.x += inset;
-			destRect.w -= inset * 2;
+			destRect.width -= inset * 2;
 		}
 
 		Drawing.DrawImageRec(image, srcRect, destRect);

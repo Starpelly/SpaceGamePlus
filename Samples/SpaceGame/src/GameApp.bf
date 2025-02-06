@@ -14,7 +14,7 @@ static
 class GameApp : App
 {
 #if !NOTTF
-	Font m_Font ~ delete _;
+	public Font MainFont { get; private set; } ~ delete _;
 #endif
 
 	public this(WindowProps windowProperties) : base(windowProperties)
@@ -33,10 +33,10 @@ class GameApp : App
 		Images.Init();
 		Sounds.Init();
 
-		m_Font = new Font();
+		MainFont = new Font();
 		//mFont.Load("zorque.ttf", 24);
 		// mFont.Load("images/Main.fnt", 0);
-		m_Font.Load("content/fonts/PressStart2P.ttf", 22);
+		MainFont.Load("content/fonts/PressStart2P.ttf", 22);
 
 		Engine.ChangeScene<GameScene>();
 	}

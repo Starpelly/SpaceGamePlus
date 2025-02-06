@@ -1,4 +1,6 @@
+using System;
 using SpaceGameEngine;
+using SpaceGameEngine.Graphics;
 
 namespace SpaceGame;
 
@@ -59,8 +61,8 @@ public class GameScene : Scene
 	{
 		m_background.Draw();
 
+		Drawing.DrawString(gGameApp.MainFont, 8, 4, scope String()..AppendF("SCORE: {}", mScore), .(240, 240, 240, 255));
 		/*
-		Drawing.DrawString(m_Font, 8, 4, scope String()..AppendF("SCORE: {}", mScore), .(240, 240, 240, 255));
 
 		if (!m_shouldSpawnEnemies)
 			Drawing.DrawString(m_Font, Engine.MainWindow.Width / 2, 200, "Use cursor keys to move and Space to fire", .(240, 240, 240, 255), true);

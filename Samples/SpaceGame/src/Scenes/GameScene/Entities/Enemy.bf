@@ -1,10 +1,10 @@
-using SDL2;
 using SpaceGameEngine;
+using SpaceGameEngine.Math;
 
 namespace SpaceGame;
 
 class Enemy : Entity
 {
 	public int mHealth;
-	public SDL.Rect mBoundingBox;
+	public Rect mBoundingBox;
 }
