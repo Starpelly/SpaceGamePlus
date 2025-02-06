@@ -1,3 +1,4 @@
+using SpaceGameEngine;
 namespace SpaceGame;
 
 class HeroBullet : Entity
@@ -8,7 +9,7 @@ class HeroBullet : Entity
 		if (Y < -16)
 			IsDeleting = true;
 
-		for (let entity in gGameApp.mEntities)
+		for (let entity in gGameApp.CurrentScene.Entities)
 		{
 			if (let enemy = entity as Enemy)
 			{
@@ -17,7 +18,7 @@ class HeroBullet : Entity
 					IsDeleting = true;
 					enemy.mHealth--;
 					
-					gGameApp.ExplodeAt(X, Y, 0.25f, 1.25f);
+					GameScene.Instance.ExplodeAt(X, Y, 0.25f, 1.25f);
 					gGameApp.PlaySound(Sounds.Explode, 0.5f, 1.5f);
 
 					break;
@@ -28,6 +29,6 @@ class HeroBullet : Entity
 
 	public override void Draw()
 	{
-		gGameApp.Draw(Images.sHeroLaser, X - 8, Y - 9);
+		// gGameApp.Draw(Images.sHeroLaser, X - 8, Y - 9);
 	}
 }

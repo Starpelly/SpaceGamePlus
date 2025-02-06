@@ -16,35 +16,16 @@ namespace SpaceGame;
 
 class Program
 {
-	class Hello : App
-	{
-		public override void Init()
-		{
-			Engine.ChangeScene<SpaceGame.Scenes.GameScene>();
-		}
-
-		public override void Update()
-		{
-
-		}
-
-		public override void Draw()
-		{
-
-		}
-	}
-
 	public static void Main()
 	{
+		let windowProps = WindowProps()
 		{
-			let gameApp = scope Hello();
-			gameApp.Init();
-			gameApp.Run();
-		}
+			Title = "SpaceGame++",
+			Width = 1024,
+			Height = 768
+		};
 
-
-		let gameApp = scope GameApp();
-		gameApp.PreInit();
+		let gameApp = scope GameApp(windowProps);
 		gameApp.Init();
 		gameApp.Run();
 	}

@@ -1,5 +1,6 @@
 namespace SpaceGame;
 
+/*
 class Entity
 {
 	public bool IsDeleting;
@@ -21,3 +22,4 @@ class Entity
 	{
 	}
 }
+*/

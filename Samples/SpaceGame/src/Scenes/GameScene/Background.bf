@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 
+using SpaceGameEngine;
+
 namespace SpaceGame;
 
 public class Background
@@ -26,17 +28,17 @@ public class Background
 	{
 		for (let i < 150)
 		{
-			let particleScale = GameApp.Random.NextFloat(0.35f, 1.0f);
+			let particleScale = Engine.Random.NextFloat(0.35f, 1.0f);
 			let particleSpeed = Math.Abs(-particleScale);
 			let newParticle = StarParticle()
 			{
-				X = GameApp.Random.NextFloat(0, gGameApp.mWidth),
-				Y = GameApp.Random.NextFloat(0, gGameApp.mHeight),
+				X = Engine.Random.NextFloat(0, SpaceGameEngine.Engine.MainWindow.Width),
+				Y = Engine.Random.NextFloat(0, SpaceGameEngine.Engine.MainWindow.Height),
 
 				Scale = particleScale,
 				Speed = particleSpeed,
 
-				SpriteAlpha = GameApp.Random.NextFloat(0.0f, 1.0f)
+				SpriteAlpha = Engine.Random.NextFloat(0.0f, 1.0f)
 			};
 			m_particles.Add(newParticle);
 		}
@@ -52,7 +54,7 @@ public class Background
 		{
 			particle.Y += particle.Speed;
 
-			if (particle.Y > gGameApp.mHeight)
+			if (particle.Y > SpaceGameEngine.Engine.MainWindow.Height)
 			{
 				particle.Y = -(Images.sStar.mHeight * particle.Scale);
 			}
@@ -66,7 +68,7 @@ public class Background
 
 		for (let particle in m_particles)
 		{
-			gGameApp.DrawEx(Images.sStar, particle.X, particle.Y, particle.Scale, particle.Scale, (uint8)(particle.SpriteAlpha * 255));
+			// gGameApp.DrawEx(Images.sStar, particle.X, particle.Y, particle.Scale, particle.Scale, (uint8)(particle.SpriteAlpha * 255));
 		}
 	}
 }

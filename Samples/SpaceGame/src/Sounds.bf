@@ -2,6 +2,8 @@ using System;
 using SDL2;
 using System.Collections;
 
+using SpaceGameEngine;
+
 namespace SpaceGame;
 
 static class Sounds
@@ -32,8 +34,8 @@ static class Sounds
 	private static List<Sound> m_shotSounds = new .() ~ delete _;
 	private static List<Sound> m_explosionSounds = new .() ~ delete _;
 
-	public static Sound RandomShot => m_shotSounds[GameApp.Random.Next(m_shotSounds.Count)];
-	public static Sound RandomExplosion => m_explosionSounds[GameApp.Random.Next(m_explosionSounds.Count)];
+	public static Sound RandomShot => m_shotSounds[Engine.Random.Next(m_shotSounds.Count)];
+	public static Sound RandomExplosion => m_explosionSounds[Engine.Random.Next(m_explosionSounds.Count)];
 
 	public static void Dispose()
 	{

@@ -1,4 +1,5 @@
-using SDL2;
+using SpaceGameEngine;
+using SpaceGameEngine.Graphics;
 
 namespace SpaceGame;
 
@@ -26,8 +27,8 @@ class Hero : Entity
 		float y = Y - 41;
 		Image image = Images.sHero;
 
-		SDL.Rect srcRect = .(0, 0, image.mWidth, image.mHeight);
-		SDL.Rect destRect = .((int32)x, (int32)y, image.mWidth, image.mHeight);
+		SDL2.SDL.Rect srcRect = .(0, 0, image.mWidth, image.mHeight);
+		SDL2.SDL.Rect destRect = .((int32)x, (int32)y, image.mWidth, image.mHeight);
 
 		if (mIsMovingX)
 		{
@@ -36,7 +37,7 @@ class Hero : Entity
 			destRect.w -= inset * 2;
 		}
 
-		SDL.RenderCopy(gGameApp.mRenderer, image.mTexture, &srcRect, &destRect);
+		// SDL.RenderCopy(gGameApp.mRenderer, image.mTexture, &srcRect, &destRect);
 	}
 
 	public override void Update()
@@ -44,7 +45,7 @@ class Hero : Entity
 		if (mReviveDelay > 0)
 		{
 			if (--mReviveDelay == 0)
-				gGameApp.mScore = 0;
+				GameScene.Instance.mScore = 0;
 			return;
 		}
 
@@ -57,9 +58,9 @@ class Hero : Entity
 
 		if (mHealth < 0)
 		{
-			gGameApp.ExplodeAt(X, Y, 1.0f, 0.5f);
+			GameScene.Instance.ExplodeAt(X, Y, 1.0f, 0.5f);
 			gGameApp.PlaySound(Sounds.Explode, 1.2f, 0.6f);
-			gGameApp.mDifficulty = 0;
+			GameScene.Instance.mDifficulty = 0;
 
 			mHealth = 1;
 			mReviveDelay = 100;

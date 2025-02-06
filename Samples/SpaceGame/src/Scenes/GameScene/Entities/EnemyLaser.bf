@@ -18,6 +18,6 @@ class EnemyLaser : EnemyProjectile
 
 	public override void Draw()
 	{
-		gGameApp.Draw(Images.sEnemyLaser, X - 10, Y - 13);
+		// gGameApp.Draw(Images.sEnemyLaser, X - 10, Y - 13);
 	}
 }

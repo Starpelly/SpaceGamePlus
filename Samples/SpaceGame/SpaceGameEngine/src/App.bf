@@ -1,10 +1,20 @@
+using internal SpaceGameEngine.Engine;
+
 namespace SpaceGameEngine;
 
 public abstract class App
 {
-	public this()
+	private readonly WindowProps m_InitialWindowProperties;
+
+	public Scene CurrentScene => Engine.CurrentScene;
+
+	// --------------
+	// Public methods
+	// --------------
+
+	public this(WindowProps windowProperties)
 	{
-		Engine.Init();
+		m_InitialWindowProperties = windowProperties;
 	}
 
 	public ~this()
@@ -12,12 +22,23 @@ public abstract class App
 		Engine.Shutdown();
 	}
 
-	public abstract void Init();
-	public abstract void Update();
-	public abstract void Draw();
+	public void Init()
+	{
+		Engine.Init(this, m_InitialWindowProperties);
+		OnInit();
+	}
 
 	public void Run()
 	{
-
+		Engine.Run();
 	}
+
+	// ----------------
+	// Abstract methods
+	// ----------------
+
+	public abstract void OnInit();
+	public abstract void OnUpdate();
+	public abstract void OnDraw();
+
 }

@@ -1,7 +1,8 @@
 using System;
-using SDL2;
 using System.Collections;
 using System.Diagnostics;
+using SpaceGameEngine;
+using SpaceGameEngine.Graphics;
 
 namespace SpaceGame;
 
@@ -10,36 +11,15 @@ static
 	public static GameApp gGameApp;
 }
 
-class GameApp : SDLApp
+class GameApp : App
 {
-	public List<Entity> mEntities = new List<Entity>() ~ DeleteContainerAndItems!(_);
-	public Hero mHero;
-	public int mScore;
-	public float mDifficulty;
-	public Random mRand = new Random() ~ delete _;
 #if !NOTTF
-	Font mFont ~ delete _;
+	Font m_Font ~ delete _;
 #endif
-	int mEmptyUpdates;
-	bool mHasMoved;
-	bool mHasShot;
-	bool mPaused;
-	bool m_shouldSpawnEnemies = false;
 
-	private Camera m_camera = new .() ~ delete _;
-	private Background m_background = new .() ~ delete _;
-
-	public static Random Random = new .() ~ delete _;
-
-	public this()
+	public this(WindowProps windowProperties) : base(windowProperties)
 	{
 		gGameApp = this;
-
-		mHero = new Hero();
-		AddEntity(mHero);
-
-		mHero.Y = 650;
-		mHero.X = 512;
 	}
 
 	public ~this()
@@ -48,90 +28,33 @@ class GameApp : SDLApp
 		Sounds.Dispose();
 	}
 
-	public override void Init()
+	public override void OnInit()
 	{
-		base.Init();
 		Images.Init();
-		if (mHasAudio)
-		{
-			Sounds.Init();
-		}
+		Sounds.Init();
 
-		mFont = new Font();
+		m_Font = new Font();
 		//mFont.Load("zorque.ttf", 24);
 		// mFont.Load("images/Main.fnt", 0);
-		mFont.Load("content/fonts/PressStart2P.ttf", 22);
+		m_Font.Load("content/fonts/PressStart2P.ttf", 22);
 
-		m_background.Init();
+		Engine.ChangeScene<GameScene>();
 	}
 
-	public void DrawString(float x, float y, String str, SDL.Color color, bool centerX = false)
+	public override void OnUpdate()
 	{
-		DrawString(mFont, x, y, str, color, centerX);
+		/*
+		// HandleInputs();
+		*/
 	}
 
-	public override void Update()
+	public override void OnDraw()
 	{
-		if (mPaused)
-			return;
-
-		base.Update();
-
-		HandleInputs();
-
-		if (m_shouldSpawnEnemies)
-		{
-			SpawnEnemies();
-
-			// Make the game harder over time
-			mDifficulty += 0.0001f;
-		}
-
-		// Scroll the background
-		m_background.Update();
-
-		for (let entity in mEntities)
-		{
-			entity.UpdateCount++;
-			entity.Update();
-			if (entity.IsDeleting)
-			{
-				// '@entity' refers to the enumerator itself
-	            @entity.Remove();
-				delete entity;
-			}
-		}
-	}
-
-	public override void Draw()
-	{
-		m_background.Draw();
-
-		for (var entity in mEntities)
+		for (var entity in CurrentScene.Entities)
 			entity.Draw();
-
-		DrawString(8, 4, scope String()..AppendF("SCORE: {}", mScore), .(240, 240, 240, 255));
-
-		if (!m_shouldSpawnEnemies)
-			DrawString(mWidth / 2, 200, "Use cursor keys to move and Space to fire", .(240, 240, 240, 255), true);
-
 	}
 
-	public void ExplodeAt(float x, float y, float sizeScale, float speedScale)
-	{
-		let explosion = new Explosion();
-		explosion.mSizeScale = sizeScale;
-		explosion.mSpeedScale = speedScale;
-		explosion.X = x;
-		explosion.Y = y;
-		mEntities.Add(explosion);
-	}
-
-	public void AddEntity(Entity entity)
-	{
-		mEntities.Add(entity);
-	}
-
+	/*
 	public override void KeyDown(SDL.KeyboardEvent evt)
 	{
 		base.KeyDown(evt);
@@ -179,43 +102,7 @@ class GameApp : SDLApp
 			m_shouldSpawnEnemies = true;
 		}
 	}
-
-	void SpawnSkirmisher()
-	{
-		let spawner = new EnemySkirmisher.Spawner();
-		spawner.mLeftSide = mRand.NextDouble() < 0.5;
-		spawner.Y = ((float)mRand.NextDouble() * 0.5f + 0.25f) * mHeight;
-		AddEntity(spawner);
-	}
-
-	void SpawnGoliath()
-	{
-		let enemy = new EnemyGolaith();
-		enemy.X = ((float)mRand.NextDouble() * 0.5f + 0.25f) * mWidth;
-		enemy.Y = -300;
-		AddEntity(enemy);
-	}
-
-	void SpawnEnemies()
-	{
-		bool hasEnemies = false;
-		for (var entity in mEntities)
-			if (entity is Enemy)
-				hasEnemies = true;
-		if (hasEnemies)
-			mEmptyUpdates = 0;
-		else
-			mEmptyUpdates++;
-
-		float spawnScale = 0.4f + (mEmptyUpdates * 0.025f);
-		spawnScale += mDifficulty;
-
-		if (mRand.NextDouble() < 0.002f * spawnScale)
-			SpawnSkirmisher();
-
-		if (mRand.NextDouble() < 0.0005f * spawnScale)
-			SpawnGoliath();
-	}
+	*/
 
 	// Sample tests
 	[Test]
@@ -228,5 +115,16 @@ class GameApp : SDLApp
 	public static void Test2()
 	{
 		Test.FatalError("Test 2 Failed");
+	}
+	
+	public void PlaySound(SDL2.Sound sound, float volume = 1.0f, float pan = 0.5f)
+	{
+		if (sound == null)
+			return;
+
+		int32 channel = SDL2.SDLMixer.PlayChannel(-1, sound.mChunk, 0);
+		if (channel < 0)
+			return;
+		SDL2.SDLMixer.Volume(channel, (int32)(volume * 128));
 	}
 }

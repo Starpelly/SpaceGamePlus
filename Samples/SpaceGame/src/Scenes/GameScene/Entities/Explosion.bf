@@ -1,4 +1,5 @@
 using SDL2;
+using SpaceGameEngine;
 
 namespace SpaceGame;
 
@@ -32,6 +33,6 @@ class Explosion : Entity
 
 		SDL.Rect srcRect = .((Frame % 6) * 130, (Frame / 6) * 130, 130, 130);
 		SDL.Rect destRect = .((int32)x, (int32)y, (int32)(mSizeScale * 130), (int32)(mSizeScale * 130));
-		SDL.RenderCopy(gGameApp.mRenderer, image.mTexture, &srcRect, &destRect);
+		// SDL.RenderCopy(gGameApp.mRenderer, image.mTexture, &srcRect, &destRect);
 	}
 }
