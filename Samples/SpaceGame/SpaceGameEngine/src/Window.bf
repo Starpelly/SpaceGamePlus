@@ -17,8 +17,22 @@ public class Window
 	private SDL2.SDL.Window* m_Window;
 	internal SDL2.SDL.Window* SDLWindow => m_Window;;
 
-	public uint Width { get; private set; }
-	public uint Height { get; private set; }
+	public uint Width
+	{
+		get
+		{
+			SDL2.SDL.GetWindowSize(m_Window, let w, let h);
+			return (uint)w;
+		}
+	}
+	public uint Height
+	{
+		get
+		{
+			SDL2.SDL.GetWindowSize(m_Window, let w, let h);
+			return (uint)h;
+		}
+	}
 
 	public this(WindowProps props)
 	{

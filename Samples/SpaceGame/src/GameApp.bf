@@ -50,8 +50,6 @@ class GameApp : App
 
 	public override void OnDraw()
 	{
-		for (var entity in CurrentScene.Entities)
-			entity.Draw();
 	}
 
 	/*

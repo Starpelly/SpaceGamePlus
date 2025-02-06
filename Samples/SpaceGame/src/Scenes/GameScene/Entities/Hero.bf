@@ -37,7 +37,7 @@ class Hero : Entity
 			destRect.w -= inset * 2;
 		}
 
-		// SDL.RenderCopy(gGameApp.mRenderer, image.mTexture, &srcRect, &destRect);
+		Drawing.DrawImageRec(image, srcRect, destRect);
 	}
 
 	public override void Update()

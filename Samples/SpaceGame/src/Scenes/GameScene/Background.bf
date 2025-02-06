@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 
 using SpaceGameEngine;
+using SpaceGameEngine.Graphics;
 
 namespace SpaceGame;
 
@@ -63,12 +64,12 @@ public class Background
 
 	public void Draw()
 	{
-		// gGameApp.Draw(Images.sSpaceImage, 0, mBkgPos - 1024);
-		// gGameApp.Draw(Images.sSpaceImage, 0, mBkgPos);
+		Drawing.DrawImage(Images.sSpaceImage, 0, mBkgPos - 1024);
+		Drawing.DrawImage(Images.sSpaceImage, 0, mBkgPos);
 
 		for (let particle in m_particles)
 		{
-			// gGameApp.DrawEx(Images.sStar, particle.X, particle.Y, particle.Scale, particle.Scale, (uint8)(particle.SpriteAlpha * 255));
+			// Drawing.DrawImageEx(Images.sStar, particle.X, particle.Y, particle.Scale, particle.Scale, (uint8)(particle.SpriteAlpha * 255));
 		}
 	}
 }

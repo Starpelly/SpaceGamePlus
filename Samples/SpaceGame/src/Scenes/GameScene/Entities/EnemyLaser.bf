@@ -1,3 +1,4 @@
+using SpaceGameEngine.Graphics;
 namespace SpaceGame;
 
 class EnemyLaser : EnemyProjectile
@@ -18,6 +19,6 @@ class EnemyLaser : EnemyProjectile
 
 	public override void Draw()
 	{
-		// gGameApp.Draw(Images.sEnemyLaser, X - 10, Y - 13);
+		Drawing.DrawImage(Images.sEnemyLaser, X - 10, Y - 13);
 	}
 }

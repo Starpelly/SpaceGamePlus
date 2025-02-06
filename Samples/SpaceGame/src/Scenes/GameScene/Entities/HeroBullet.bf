@@ -1,4 +1,5 @@
 using SpaceGameEngine;
+using SpaceGameEngine.Graphics;
 namespace SpaceGame;
 
 class HeroBullet : Entity
@@ -29,6 +30,6 @@ class HeroBullet : Entity
 
 	public override void Draw()
 	{
-		// gGameApp.Draw(Images.sHeroLaser, X - 8, Y - 9);
+		Drawing.DrawImage(Images.sHeroLaser, X - 8, Y - 9);
 	}
 }

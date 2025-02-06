@@ -184,8 +184,7 @@ public static class Engine
 
 	private static void Update()
 	{
-		m_App.OnUpdate();
-
+		m_CurrentScene.OnUpdate();
 		for (let entity in m_CurrentScene.Entities)
 		{
 			entity.UpdateCount++;
@@ -197,12 +196,20 @@ public static class Engine
 				delete entity;
 			}
 		}
+
+		m_App.OnUpdate();
 	}
 
 	private static void Render()
 	{
 		Renderer.Open();
+
+		m_CurrentScene.OnDraw();
+		for (var entity in m_CurrentScene.Entities)
+			entity.Draw();
+
 		m_App.OnDraw();
+
 		Renderer.Close();
 	}
 }

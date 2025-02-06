@@ -2,6 +2,7 @@ using System;
 using SDL2;
 
 using SpaceGameEngine;
+using SpaceGameEngine.Graphics;
 
 namespace SpaceGame;
 
@@ -77,7 +78,7 @@ class EnemyGolaith : Enemy
 	public override void Draw()
 	{
 		SDL.SetTextureAlphaMod(Images.sEnemyGoliath.mTexture, (.)(255 * mAlpha));
-		// gGameApp.Draw(Images.sEnemyGoliath, X - 63, Y - 168);
+		Drawing.DrawImage(Images.sEnemyGoliath, X - 63, Y - 168);
 		SDL.SetTextureAlphaMod(Images.sEnemyGoliath.mTexture, 255);
 	}
 }

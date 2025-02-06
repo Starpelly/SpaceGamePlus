@@ -8,6 +8,37 @@ namespace SpaceGameEngine.Graphics;
 /// Used for primitive drawing. (Shapes, Images, etc)
 public static class Drawing
 {
+	public static void DrawImage(Image image, float x, float y)
+	{
+		SDL2.SDL.Rect srcRect = .(0, 0, image.mWidth, image.mHeight);
+		SDL2.SDL.Rect destRect = .((int32)x, (int32)y, image.mWidth, image.mHeight);
+		SDL2.SDL.RenderCopy(Engine.Renderer.SDLRenderer, image.mTexture, &srcRect, &destRect);
+	}
+
+	public static void DrawImage(Image image, float x, float y, float rot, float centerX, float centerY)
+	{
+		SDL2.SDL.Rect srcRect = .(0, 0, image.mWidth, image.mHeight);
+		SDL2.SDL.Rect destRect = .((int32)x, (int32)y, image.mWidth, image.mHeight);
+		SDL2.SDL.Point centerPoint = .((.)centerX, (.)centerY);
+		SDL2.SDL.RenderCopyEx(Engine.Renderer.SDLRenderer, image.mTexture, &srcRect, &destRect, rot, &centerPoint, .None);
+	}
+
+	public static void DrawImageEx(Image image, float x, float y, float scaleX, float scaleY, uint8 alpha)
+	{
+		SDL2.SDL.SetTextureAlphaMod(image.mTexture, alpha);
+
+		SDL2.SDL.Rect srcRect = .(0, 0, image.mWidth, image.mHeight);
+		SDL2.SDL.FRect destRect = .(x, y, image.mWidth * scaleX, image.mHeight * scaleY);
+		SDL2.SDL.RenderCopyF(Engine.Renderer.SDLRenderer, image.mTexture, &srcRect, &destRect);
+	}
+
+	public static void DrawImageRec(Image image, SDL2.SDL.Rect srcRect, SDL2.SDL.Rect destRect)
+	{
+		var srcRect;
+		var destRect;
+		SDL2.SDL.RenderCopy(Engine.Renderer.SDLRenderer, image.mTexture, &srcRect, &destRect);
+	}
+
 	public static void DrawString(Font font, float x, float y, String str, Color color, bool centerX = false)
 	{
 		var x;

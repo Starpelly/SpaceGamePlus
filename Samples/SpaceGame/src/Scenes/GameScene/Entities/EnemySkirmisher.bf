@@ -1,5 +1,6 @@
 using System;
 using SpaceGameEngine;
+using SpaceGameEngine.Graphics;
 
 namespace SpaceGame;
 
@@ -74,8 +75,7 @@ class EnemySkirmisher : Enemy
 
 	public override void Draw()
 	{
-		//using (g.PushRotate(mRot + (float)Math.PI_d/2))
-		// gGameApp.Draw(Images.sEnemySkirmisher, X - 21, Y - 16);
+		Drawing.DrawImage(Images.sEnemySkirmisher, X - 21, Y - 16);
 	}
 
 	private void explode()
