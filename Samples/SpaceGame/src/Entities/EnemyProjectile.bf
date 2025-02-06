@@ -10,10 +10,10 @@ class EnemyProjectile : Entity
 			return;
 
 		SDL.Rect heroBoundingBox = .(-30, -30, 60, 60);
-		if (heroBoundingBox.Contains((.)(mX - gGameApp.mHero.mX), (.)(mY - gGameApp.mHero.mY)))
+		if (heroBoundingBox.Contains((.)(X - gGameApp.mHero.X), (.)(Y - gGameApp.mHero.Y)))
 		{
-			gGameApp.ExplodeAt(mX, mY, 0.25f, 1.25f);
-			gApp.PlaySound(Sounds.sExplode, 0.5f, 1.5f);
+			gGameApp.ExplodeAt(X, Y, 0.25f, 1.25f);
+			gApp.PlaySound(Sounds.Explode, 0.5f, 1.5f);
 			gGameApp.mHero.mHealth--;
 		}
 	}

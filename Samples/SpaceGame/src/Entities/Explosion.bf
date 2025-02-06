@@ -11,14 +11,14 @@ class Explosion : Entity
 	{
 		get
 		{
-			return (int32)(mSpeedScale * mUpdateCnt);
+			return (int32)(mSpeedScale * UpdateCount);
 		}
 	}
 
 	public override void Update()
 	{
 		if (Frame == 42)
-			mIsDeleting = true;
+			IsDeleting = true;
 	}
 
 	public override void Draw()
@@ -27,8 +27,8 @@ class Explosion : Entity
 		//gGameApp.Draw(Images.sExplosion[Frame / 6, Frame % 6], -64, -64);
 
 		let image = Images.sExplosionImage;
-		float x = mX - (65 * mSizeScale);
-		float y = mY - (65 * mSizeScale);
+		float x = X - (65 * mSizeScale);
+		float y = Y - (65 * mSizeScale);
 
 		SDL.Rect srcRect = .((Frame % 6) * 130, (Frame / 6) * 130, 130, 130);
 		SDL.Rect destRect = .((int32)x, (int32)y, (int32)(mSizeScale * 130), (int32)(mSizeScale * 130));

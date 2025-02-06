@@ -1,0 +1,7 @@
+FileVersion = 1
+Dependencies = {corlib = "*", SDL2 = "*"}
+
+[Project]
+Name = "SpaceGameEngine"
+TargetType = "BeefLib"
+StartupObject = "SpaceGameEngine.Program"

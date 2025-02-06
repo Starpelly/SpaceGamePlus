@@ -10,19 +10,19 @@ class EnemySkirmisher : Enemy
 
 		public override void Update()
 		{
-			if (mUpdateCnt % 20 == 0)
+			if (UpdateCount % 20 == 0)
 			{
 				let enemy = new EnemySkirmisher();
-				enemy.mY = mY;
+				enemy.Y = Y;
 				if (mLeftSide)
 				{
-					enemy.mX = -24;
+					enemy.X = -24;
 					enemy.mRot = 0.0f;
 					enemy.mRotAdd = -(0.001f + (float)gGameApp.mRand.NextDouble() * 0.001f);
 				}
 				else
 				{
-					enemy.mX = gGameApp.mWidth + 24;
+					enemy.X = gGameApp.mWidth + 24;
 					enemy.mRot = (float)-Math.PI_d;
 					enemy.mRotAdd = 0.001f + (float)gGameApp.mRand.NextDouble() * 0.001f;
 				}
@@ -30,8 +30,8 @@ class EnemySkirmisher : Enemy
 				gGameApp.AddEntity(enemy);
 			}
 
-			if (mUpdateCnt >= 200)
-				mIsDeleting = true;
+			if (UpdateCount >= 200)
+				IsDeleting = true;
 		}
 	}
 
@@ -47,27 +47,24 @@ class EnemySkirmisher : Enemy
 	public override void Update()
 	{
 		float speed = 3.0f;
-		mX += (float)Math.Cos(mRot) * speed;
-		mY += (float)Math.Sin(mRot) * speed;
+		X += (float)Math.Cos(mRot) * speed;
+		Y += (float)Math.Sin(mRot) * speed;
 
 		mRot += mRotAdd;
 
 		if (IsOffscreen(32, 32))
-			mIsDeleting = true;
+			IsDeleting = true;
 
 		if (mHealth <= 0)
 		{
-			gGameApp.ExplodeAt(mX, mY, 0.6f, 1.2f);
-			gGameApp.PlaySound(Sounds.sExplode, 0.7f, 1.2f);
-			gGameApp.mScore += 50;
-			mIsDeleting = true;
+			explode();
 		}
 
 		if (gGameApp.mRand.NextDouble() < 0.01)
 		{
 			let enemyLaser = new EnemyLaser();
-			enemyLaser.mX = mX;
-			enemyLaser.mY = mY;
+			enemyLaser.X = X;
+			enemyLaser.Y = Y;
 			enemyLaser.mVelX = ((float)gGameApp.mRand.NextDouble() - 0.5f) * 1.0f;
 			enemyLaser.mVelY = 2.0f;
 			gGameApp.AddEntity(enemyLaser);
@@ -77,6 +74,14 @@ class EnemySkirmisher : Enemy
 	public override void Draw()
 	{
 		//using (g.PushRotate(mRot + (float)Math.PI_d/2))
-		gGameApp.Draw(Images.sEnemySkirmisher, mX - 21, mY - 16);
+		gGameApp.Draw(Images.sEnemySkirmisher, X - 21, Y - 16);
+	}
+
+	private void explode()
+	{
+		gGameApp.ExplodeAt(X, Y, 0.6f, 1.2f);
+		gGameApp.PlaySound(Sounds.Explode, 0.7f, 1.2f);
+		gGameApp.mScore += 50;
+		IsDeleting = true;
 	}
 }

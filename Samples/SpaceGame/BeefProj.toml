@@ -1,5 +1,5 @@
 FileVersion = 1
-Dependencies = {corlib = "*", SDL2 = "*"}
+Dependencies = {corlib = "*", SDL2 = "*", SpaceGameEngine = "*"}
 
 [Project]
 Name = "SpaceGame"
@@ -9,6 +9,7 @@ StartupObject = "SpaceGame.Program"
 [Configs.Debug.Win64]
 TargetDirectory = "$(WorkspaceDir)/dist"
 TargetName = "$(ProjectName)_d"
+PostBuildCmds = ["CopyFilesIfNewer(\"$(ProjectDir)/content\", \"$(WorkspaceDir)/dist\")"]
 
 [Configs.Debug.Linux64]
 TargetDirectory = "$(WorkspaceDir)/dist"

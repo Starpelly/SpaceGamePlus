@@ -9,15 +9,15 @@ class EnemyLaser : EnemyProjectile
 	{
 		base.Update();
 
-		mX += mVelX;
-		mY += mVelY;
+		X += mVelX;
+		Y += mVelY;
 
 		if (IsOffscreen(16, 16))
-			mIsDeleting = true;
+			IsDeleting = true;
 	}
 
 	public override void Draw()
 	{
-		gGameApp.Draw(Images.sEnemyLaser, mX - 10, mY - 13);
+		gGameApp.Draw(Images.sEnemyLaser, X - 10, Y - 13);
 	}
 }

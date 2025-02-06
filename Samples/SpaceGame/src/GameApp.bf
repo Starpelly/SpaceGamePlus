@@ -20,13 +20,16 @@ class GameApp : SDLApp
 #if !NOTTF
 	Font mFont ~ delete _;
 #endif
-	float mBkgPos;
 	int mEmptyUpdates;
 	bool mHasMoved;
 	bool mHasShot;
 	bool mPaused;
-
 	bool m_shouldSpawnEnemies = false;
+
+	private Camera m_camera = new .() ~ delete _;
+	private Background m_background = new .() ~ delete _;
+
+	public static Random Random = new .() ~ delete _;
 
 	public this()
 	{
@@ -35,8 +38,8 @@ class GameApp : SDLApp
 		mHero = new Hero();
 		AddEntity(mHero);
 
-		mHero.mY = 650;
-		mHero.mX = 512;
+		mHero.Y = 650;
+		mHero.X = 512;
 	}
 
 	public ~this()
@@ -50,11 +53,16 @@ class GameApp : SDLApp
 		base.Init();
 		Images.Init();
 		if (mHasAudio)
+		{
 			Sounds.Init();
+		}
 
 		mFont = new Font();
 		//mFont.Load("zorque.ttf", 24);
-		mFont.Load("images/Main.fnt", 0);
+		// mFont.Load("images/Main.fnt", 0);
+		mFont.Load("content/fonts/PressStart2P.ttf", 22);
+
+		m_background.Init();
 	}
 
 	public void DrawString(float x, float y, String str, SDL.Color color, bool centerX = false)
@@ -80,15 +88,13 @@ class GameApp : SDLApp
 		}
 
 		// Scroll the background
-		mBkgPos += 0.6f;
-		if (mBkgPos > 1024)
-			mBkgPos -= 1024;
+		m_background.Update();
 
 		for (let entity in mEntities)
 		{
-			entity.mUpdateCnt++;
+			entity.UpdateCount++;
 			entity.Update();
-			if (entity.mIsDeleting)
+			if (entity.IsDeleting)
 			{
 				// '@entity' refers to the enumerator itself
 	            @entity.Remove();
@@ -99,16 +105,16 @@ class GameApp : SDLApp
 
 	public override void Draw()
 	{
-		Draw(Images.sSpaceImage, 0, mBkgPos - 1024);
-		Draw(Images.sSpaceImage, 0, mBkgPos);
+		m_background.Draw();
 
 		for (var entity in mEntities)
 			entity.Draw();
 
-		DrawString(8, 4, scope String()..AppendF("SCORE: {}", mScore), .(64, 255, 64, 255));
+		DrawString(8, 4, scope String()..AppendF("SCORE: {}", mScore), .(240, 240, 240, 255));
 
 		if (!m_shouldSpawnEnemies)
-			DrawString(mWidth / 2, 200, "Use cursor keys to move and Space to fire", .(255, 255, 255, 255), true);
+			DrawString(mWidth / 2, 200, "Use cursor keys to move and Space to fire", .(240, 240, 240, 255), true);
+
 	}
 
 	public void ExplodeAt(float x, float y, float sizeScale, float speedScale)
@@ -116,8 +122,8 @@ class GameApp : SDLApp
 		let explosion = new Explosion();
 		explosion.mSizeScale = sizeScale;
 		explosion.mSpeedScale = speedScale;
-		explosion.mX = x;
-		explosion.mY = y;
+		explosion.X = x;
+		explosion.Y = y;
 		mEntities.Add(explosion);
 	}
 
@@ -137,7 +143,7 @@ class GameApp : SDLApp
 	{
 		float deltaX = 0;
 		float deltaY = 0;
-		float moveSpeed = Hero.cMoveSpeed;
+		float moveSpeed = Hero.MOVE_SPEED;
 		if (IsKeyDown(.Left))
 			deltaX -= moveSpeed;
 		if (IsKeyDown(.Right))
@@ -150,8 +156,8 @@ class GameApp : SDLApp
 
 		if ((deltaX != 0) || (deltaY != 0))
 		{
-			mHero.mX = Math.Clamp(mHero.mX + deltaX, 10, mWidth - 10);
-			mHero.mY = Math.Clamp(mHero.mY + deltaY, 10, mHeight - 10);
+			mHero.X = Math.Clamp(mHero.X + deltaX, 10, mWidth - 10);
+			mHero.Y = Math.Clamp(mHero.Y + deltaY, 10, mHeight - 10);
 			mHasMoved = true;
 		}
 		mHero.mIsMovingX = deltaX != 0;
@@ -159,12 +165,13 @@ class GameApp : SDLApp
 		if ((IsKeyDown(.Space)) && (mHero.mShootDelay == 0))
 		{
 			mHasShot = true;
-			mHero.mShootDelay = Hero.cShootDelay;
+			mHero.mShootDelay = Hero.SHOOT_DELAY;
 			let bullet = new HeroBullet();
-			bullet.mX = mHero.mX;
-			bullet.mY = mHero.mY - 50;
+			bullet.X = mHero.X;
+			bullet.Y = mHero.Y - 50;
 			AddEntity(bullet);
-			PlaySound(Sounds.sLaser, 0.1f);
+
+			PlaySound(Sounds.RandomShot, GameApp.Random.NextFloat(0.085f, 0.1f));
 		}
 
 		if (mHasMoved && mHasShot)
@@ -177,15 +184,15 @@ class GameApp : SDLApp
 	{
 		let spawner = new EnemySkirmisher.Spawner();
 		spawner.mLeftSide = mRand.NextDouble() < 0.5;
-		spawner.mY = ((float)mRand.NextDouble() * 0.5f + 0.25f) * mHeight;
+		spawner.Y = ((float)mRand.NextDouble() * 0.5f + 0.25f) * mHeight;
 		AddEntity(spawner);
 	}
 
 	void SpawnGoliath()
 	{
 		let enemy = new EnemyGolaith();
-		enemy.mX = ((float)mRand.NextDouble() * 0.5f + 0.25f) * mWidth;
-		enemy.mY = -300;
+		enemy.X = ((float)mRand.NextDouble() * 0.5f + 0.25f) * mWidth;
+		enemy.Y = -300;
 		AddEntity(enemy);
 	}
 

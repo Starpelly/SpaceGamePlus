@@ -17,6 +17,8 @@ static class Images
 	public static Image sEnemyBomb;
 	public static Image sEnemyPhaser;
 
+	public static Image sStar;
+
 	static List<Image> sImages = new .() ~ delete _;
 
 	public static Result<Image> Load(StringView fileName)
@@ -49,6 +51,8 @@ static class Images
 
 		sSpaceImage = Try!(Load("images/space.jpg"));
 		sExplosionImage = Try!(Load("images/explosion.png"));
+
+		sStar = Try!(Load("content/images/star.png"));
 
 		return .Ok;
 	}

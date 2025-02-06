@@ -4,8 +4,8 @@ namespace SpaceGame;
 
 class Hero : Entity
 {
-	public const int cShootDelay = 10; // How many frames to delay between shots
-	public const float cMoveSpeed = 4.0f;
+	public const int SHOOT_DELAY = 10; // How many frames to delay between shots
+	public const float MOVE_SPEED = 4.0f;
 
 	public int mHealth = 1;
 	public bool mIsMovingX;
@@ -22,8 +22,8 @@ class Hero : Entity
 		if ((mInvincibleDelay > 0) && ((mInvincibleDelay / 5 % 2 == 0)))
 			return;
 
-		float x = mX - 29;
-		float y = mY - 41;
+		float x = X - 29;
+		float y = Y - 41;
 		Image image = Images.sHero;
 
 		SDL.Rect srcRect = .(0, 0, image.mWidth, image.mHeight);
@@ -57,8 +57,8 @@ class Hero : Entity
 
 		if (mHealth < 0)
 		{
-			gGameApp.ExplodeAt(mX, mY, 1.0f, 0.5f);
-			gGameApp.PlaySound(Sounds.sExplode, 1.2f, 0.6f);
+			gGameApp.ExplodeAt(X, Y, 1.0f, 0.5f);
+			gGameApp.PlaySound(Sounds.Explode, 1.2f, 0.6f);
 			gGameApp.mDifficulty = 0;
 
 			mHealth = 1;

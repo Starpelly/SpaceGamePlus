@@ -36,16 +36,16 @@ class EnemyGolaith : Enemy
 		switch (mState)
 		{
 		case .Lowering:
-			mY += 2.0f;
-			if (mY >= 300)
+			Y += 2.0f;
+			if (Y >= 300)
 				mState++;
 		case .Firing:
 			mStateTick++;
 			if (mStateTick % 4 == 0)
 			{
 				let enemyLaser = new EnemyLaser();
-				enemyLaser.mX = mX;
-				enemyLaser.mY = mY;
+				enemyLaser.X = X;
+				enemyLaser.Y = Y;
 				float angle = ((float)gGameApp.mRand.NextDouble() - 0.5f) * 3.0f + (float)Math.PI_d/2;
 				float speed = 3.0f;
 				enemyLaser.mVelX = (float)Math.Cos(angle) * speed;
@@ -55,27 +55,27 @@ class EnemyGolaith : Enemy
 			if (mStateTick == 200)
 				mState++;
 		case .Raising:
-			mY -= 2.0f;
-			if (mY < -300)
-				mIsDeleting = true;
+			Y -= 2.0f;
+			if (Y < -300)
+				IsDeleting = true;
 
 		case .Death:
 			mStateTick++;
 			if (mStateTick % 6 == 0)
 			{
-				gGameApp.ExplodeAt(mX + (float)gGameApp.mRand.NextDoubleSigned() * 40, mY + (float)gGameApp.mRand.NextDoubleSigned() * 40, 1.0f, 0.4f);
-				gGameApp.PlaySound(Sounds.sExplode, 1.0f, 1.0f);
+				gGameApp.ExplodeAt(X + (float)gGameApp.mRand.NextDoubleSigned() * 40, Y + (float)gGameApp.mRand.NextDoubleSigned() * 40, 1.0f, 0.4f);
+				gGameApp.PlaySound(Sounds.Explode, 1.0f, 1.0f);
 			}
 			mAlpha = Math.Max(0.0f, mAlpha - 0.015f);
 			if (mAlpha <= 0)
-				mIsDeleting = true;
+				IsDeleting = true;
 		}
 	}
 
 	public override void Draw()
 	{
 		SDL.SetTextureAlphaMod(Images.sEnemyGoliath.mTexture, (.)(255 * mAlpha));
-		gGameApp.Draw(Images.sEnemyGoliath, mX - 63, mY - 168);
+		gGameApp.Draw(Images.sEnemyGoliath, X - 63, Y - 168);
 		SDL.SetTextureAlphaMod(Images.sEnemyGoliath.mTexture, 255);
 	}
 }
