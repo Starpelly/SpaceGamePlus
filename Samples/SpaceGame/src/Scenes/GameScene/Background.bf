@@ -69,7 +69,7 @@ public class Background
 
 		for (let particle in m_particles)
 		{
-			// Drawing.DrawImageEx(Images.sStar, particle.X, particle.Y, particle.Scale, particle.Scale, (uint8)(particle.SpriteAlpha * 255));
+			Drawing.DrawImageEx(Images.sStar, particle.X, particle.Y, particle.Scale, particle.Scale, (uint8)(particle.SpriteAlpha * 255));
 		}
 	}
 }

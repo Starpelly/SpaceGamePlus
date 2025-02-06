@@ -5,6 +5,7 @@ using SDL2;
 using System.Threading;
 
 using SpaceGameEngine.Graphics;
+using internal SpaceGameEngine.Scene;
 
 namespace SpaceGameEngine;
 
@@ -32,8 +33,6 @@ public static class Engine
 
 	// Engine properties
 	private static uint32 m_UpdateCount = 0;
-	private static bool* m_KeyboardState;
-
 	private static bool m_HasAudio = false;
 
 	// --------------
@@ -44,11 +43,11 @@ public static class Engine
 	{
 		if (m_CurrentScene != null)
 		{
-			m_CurrentScene.OnUnload();
+			m_CurrentScene.Unload();
 			DeleteAndNullify!(m_CurrentScene);
 		}
 		m_CurrentScene = new T();
-		m_CurrentScene.OnLoad();
+		m_CurrentScene.Load();
 	}
 
 	// ----------------
@@ -127,16 +126,14 @@ public static class Engine
 			{
 			case .Quit:
 				return false;
-				/*
 			case .KeyDown:
-				KeyDown(event.key);
+				OnKeyPressed(event.key);
 			case .KeyUp:
-				KeyUp(event.key);
+				OnKeyReleased(event.key);
 			case .MouseButtonDown:
-				MouseDown(event.button);
+				OnMouseButtonPressed(event.button);
 			case .MouseButtonUp:
-				MouseUp(event.button);
-				*/
+				OnMouseButtonReleased(event.button);
 			default:
 			}
 
@@ -159,7 +156,7 @@ public static class Engine
 		}
 		else
 		{
-			m_KeyboardState = SDL.GetKeyboardState(null);
+			Input.[Friend]Poll();
 
 			addTicks = Math.Min(addTicks, 20); // Limit catchup
 			if (addTicks > 0)
@@ -184,18 +181,7 @@ public static class Engine
 
 	private static void Update()
 	{
-		m_CurrentScene.OnUpdate();
-		for (let entity in m_CurrentScene.Entities)
-		{
-			entity.UpdateCount++;
-			entity.Update();
-			if (entity.IsDeleting)
-			{
-				// '@entity' refers to the enumerator itself
-		        @entity.Remove();
-				delete entity;
-			}
-		}
+		m_CurrentScene.Update();
 
 		m_App.OnUpdate();
 	}
@@ -203,13 +189,29 @@ public static class Engine
 	private static void Render()
 	{
 		Renderer.Open();
+		defer Renderer.Close();
 
-		m_CurrentScene.OnDraw();
-		for (var entity in m_CurrentScene.Entities)
-			entity.Draw();
-
+		m_CurrentScene.[Friend]Draw();
 		m_App.OnDraw();
+	}
 
-		Renderer.Close();
+	private static void OnKeyPressed(SDL2.SDL.KeyboardEvent key)
+	{
+		m_CurrentScene.[Friend]OnKeyPressed((KeyCode)key.keysym.scancode);
+	}
+
+	private static void OnKeyReleased(SDL2.SDL.KeyboardEvent key)
+	{
+		m_CurrentScene.[Friend]OnKeyReleased((KeyCode)key.keysym.scancode);
+	}
+
+	private static void OnMouseButtonPressed(SDL2.SDL.MouseButtonEvent button)
+	{
+
+	}
+
+	private static void OnMouseButtonReleased(SDL2.SDL.MouseButtonEvent button)
+	{
+
 	}
 }

@@ -1,6 +1,7 @@
 using SpaceGameEngine;
 using SpaceGameEngine.Graphics;
 using SpaceGameEngine.Math;
+using System;
 
 namespace SpaceGame;
 
@@ -15,6 +16,9 @@ class Hero : Entity
 
 	public int mReviveDelay = 0;
 	public int mInvincibleDelay = 0;
+
+	private bool mHasShot;
+	private bool mHasMoved;
 
 	public override void Draw()
 	{
@@ -43,6 +47,8 @@ class Hero : Entity
 
 	public override void Update()
 	{
+		HandleInputs();
+
 		if (mReviveDelay > 0)
 		{
 			if (--mReviveDelay == 0)
@@ -66,6 +72,47 @@ class Hero : Entity
 			mHealth = 1;
 			mReviveDelay = 100;
 			mInvincibleDelay = 100;
+		}
+	}
+
+	private void HandleInputs()
+	{
+		float deltaX = 0;
+		float deltaY = 0;
+		float moveSpeed = Hero.MOVE_SPEED;
+		if (Input.IsKeyDown(.Left))
+			deltaX -= moveSpeed;
+		if (Input.IsKeyDown(.Right))
+			deltaX += moveSpeed;
+
+		if (Input.IsKeyDown(.Up))
+			deltaY -= moveSpeed;
+		if (Input.IsKeyDown(.Down))
+			deltaY += moveSpeed;
+
+		if ((deltaX != 0) || (deltaY != 0))
+		{
+			X = Math.Clamp(X + deltaX, 10, Engine.MainWindow.Width - 10);
+			Y = Math.Clamp(Y + deltaY, 10, Engine.MainWindow.Height - 10);
+			mHasMoved = true;
+		}
+		mIsMovingX = deltaX != 0;
+
+		if ((Input.IsKeyDown(.Space)) && (mShootDelay == 0))
+		{
+			mHasShot = true;
+			mShootDelay = Hero.SHOOT_DELAY;
+			let bullet = new HeroBullet();
+			bullet.X = X;
+			bullet.Y = Y - 50;
+			GameScene.Instance.AddEntity(bullet);
+
+			gGameApp.PlaySound(Sounds.RandomShot, Engine.Random.NextFloat(0.085f, 0.1f));
+		}
+
+		if (mHasMoved && mHasShot)
+		{
+			GameScene.Instance.ShouldSpawnEnemies = true;
 		}
 	}
 }

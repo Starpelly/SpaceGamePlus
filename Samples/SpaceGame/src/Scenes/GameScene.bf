@@ -11,12 +11,12 @@ public class GameScene : Scene
 	public Hero mHero;
 	public int mScore;
 	public float mDifficulty;
+	public bool ShouldSpawnEnemies = false;
 
 	private int mEmptyUpdates;
 	private bool mHasMoved;
 	private bool mHasShot;
 	private bool mPaused;
-	private bool m_shouldSpawnEnemies = false;
 
 	private Background m_background = new .() ~ delete _;
 
@@ -25,7 +25,7 @@ public class GameScene : Scene
 		Instance = this;
 	}
 
-	public override void OnLoad()
+	protected override void OnLoad()
 	{
 		mHero = new Hero();
 		AddEntity(mHero);
@@ -36,16 +36,16 @@ public class GameScene : Scene
 		m_background.Init();
 	}
 
-	public override void OnUnload()
+	protected override void OnUnload()
 	{
 	}
 
-	public override void OnUpdate()
+	protected override void OnUpdate()
 	{
 		if (mPaused)
 			return;
 
-		if (m_shouldSpawnEnemies)
+		if (ShouldSpawnEnemies)
 		{
 			SpawnEnemies();
 
@@ -57,16 +57,13 @@ public class GameScene : Scene
 		m_background.Update();
 	}
 
-	public override void OnDraw()
+	protected override void OnDraw()
 	{
 		m_background.Draw();
 
 		Drawing.DrawString(gGameApp.MainFont, 8, 4, scope String()..AppendF("SCORE: {}", mScore), .(240, 240, 240, 255));
-		/*
-
-		if (!m_shouldSpawnEnemies)
-			Drawing.DrawString(m_Font, Engine.MainWindow.Width / 2, 200, "Use cursor keys to move and Space to fire", .(240, 240, 240, 255), true);
-		*/
+		if (!ShouldSpawnEnemies)
+			Drawing.DrawString(gGameApp.MainFont, Engine.MainWindow.Width / 2, 200, "Use cursor keys to move and Space to fire", .(240, 240, 240, 255), true);
 	}
 
 	public void ExplodeAt(float x, float y, float sizeScale, float speedScale)
