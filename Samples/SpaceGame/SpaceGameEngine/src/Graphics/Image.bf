@@ -1,26 +1,44 @@
 using System;
-using SDL2;
 namespace SpaceGameEngine.Graphics;
+
+#if ENGINE_SDL2
+using SDL2;
+#elif ENGINE_RAYLIB
+using RaylibBeef;
+#endif
 
 using internal SpaceGameEngine.Graphics.Renderer;
 
-class Image
+public class Image
 {
-	public SDL.Surface* mSurface;
-	public SDL.Texture* mTexture;
 	public int32 mWidth;
 	public int32 mHeight;
 
+#if ENGINE_SDL2
+	public SDL.Surface* mSurface;
+	public SDL.Texture* mTexture;
+#elif ENGINE_RAYLIB
+	private RaylibBeef.Image m_Image;
+
+	private RaylibBeef.Texture2D m_Texture;
+	public RaylibBeef.Texture2D Texture => m_Texture;
+#endif
+
 	public ~this()
 	{
+#if ENGINE_SDL2
 		if (mTexture != null)
 			SDL.DestroyTexture(mTexture);
 		if (mSurface != null)
 			SDL.FreeSurface(mSurface);
+#elif ENGINE_RAYLIB
+		Raylib.UnloadTexture(m_Texture);
+#endif
 	}
 
 	public Result<void> Load(StringView fileName)
 	{
+#if ENGINE_SDL2
 		let origSurface = SDLImage.Load(fileName.ToScopeCStr!());
 		if (origSurface == null)
 			return .Err;
@@ -45,6 +63,12 @@ class Image
 
 		mWidth = mSurface.w;
 		mHeight = mSurface.h;
+#elif ENGINE_RAYLIB
+		m_Texture = Raylib.LoadTexture(fileName.Ptr);
+
+		mWidth = m_Texture.width;
+		mHeight = m_Texture.height;
+#endif
 
 		return .Ok;
 	}

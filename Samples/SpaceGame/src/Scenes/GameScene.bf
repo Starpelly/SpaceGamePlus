@@ -59,6 +59,7 @@ public class GameScene : Scene
 
 	protected override void OnDraw()
 	{
+		// Draw the background
 		m_background.Draw();
 
 		Drawing.DrawString(gGameApp.MainFont, 8, 4, scope String()..AppendF("SCORE: {}", mScore), .(240, 240, 240, 255));

@@ -1,5 +1,4 @@
 using System;
-using SDL2;
 
 using SpaceGameEngine;
 using SpaceGameEngine.Graphics;
@@ -67,7 +66,7 @@ class EnemyGolaith : Enemy
 			if (mStateTick % 6 == 0)
 			{
 				GameScene.Instance.ExplodeAt(X + (float)Engine.Random.NextDoubleSigned() * 40, Y + (float)Engine.Random.NextDoubleSigned() * 40, 1.0f, 0.4f);
-				gGameApp.PlaySound(Sounds.Explode, 1.0f, 1.0f);
+				Engine.PlaySound(Sounds.Explode, 1.0f, 1.0f);
 			}
 			mAlpha = Math.Max(0.0f, mAlpha - 0.015f);
 			if (mAlpha <= 0)
@@ -77,8 +76,8 @@ class EnemyGolaith : Enemy
 
 	public override void Draw()
 	{
-		SDL.SetTextureAlphaMod(Images.sEnemyGoliath.mTexture, (.)(255 * mAlpha));
+		// SDL.SetTextureAlphaMod(Images.sEnemyGoliath.mTexture, (.)(255 * mAlpha));
 		Drawing.DrawImage(Images.sEnemyGoliath, X - 63, Y - 168);
-		SDL.SetTextureAlphaMod(Images.sEnemyGoliath.mTexture, 255);
+		// SDL.SetTextureAlphaMod(Images.sEnemyGoliath.mTexture, 255);
 	}
 }

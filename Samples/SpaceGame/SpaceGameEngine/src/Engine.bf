@@ -1,10 +1,11 @@
 using System;
 using System.IO;
 using System.Diagnostics;
-using SDL2;
 using System.Threading;
 
 using SpaceGameEngine.Graphics;
+using SpaceGameEngine.Audio;
+
 using internal SpaceGameEngine.Scene;
 
 namespace SpaceGameEngine;
@@ -13,6 +14,8 @@ public static class Engine
 {
 	// Engine modules
 	public static Renderer Renderer { get; private set; } ~ delete _;
+	private static AudioManager AudioManager { get; private set; } ~ delete _;
+
 	public static Random Random { get; private set; } = new .() ~ delete _;
 
 	// Singletons
@@ -33,7 +36,6 @@ public static class Engine
 
 	// Engine properties
 	private static uint32 m_UpdateCount = 0;
-	private static bool m_HasAudio = false;
 
 	// --------------
 	// Public methods
@@ -50,6 +52,20 @@ public static class Engine
 		m_CurrentScene.Load();
 	}
 
+	public static void PlaySound(Sound sound, float volume = 1.0f, float pan = 0.5f)
+	{
+		if (sound == null)
+			return;
+#if ENGINE_SDL2
+		int32 channel = SDL2.SDLMixer.PlayChannel(-1, sound.mChunk, 0);
+		if (channel < 0)
+			return;
+		SDL2.SDLMixer.Volume(channel, (int32)(volume * 128));
+#elif ENGINE_RAYLIB
+		RaylibBeef.Raylib.PlaySound(sound.Sound);
+#endif
+	}
+
 	// ----------------
 	// Internal methods
 	// ----------------
@@ -64,26 +80,9 @@ public static class Engine
 		if (Path.GetDirectoryPath(exePath, exeDir) case .Ok)
 			Directory.SetCurrentDirectory(exeDir);
 
-		SDL2.SDL.Init(.Video | .Events | .Audio);
-		SDL2.SDL.EventState(.JoyAxisMotion, .Disable);
-		SDL2.SDL.EventState(.JoyBallMotion, .Disable);
-		SDL2.SDL.EventState(.JoyHatMotion, .Disable);
-		SDL2.SDL.EventState(.JoyButtonDown, .Disable);
-		SDL2.SDL.EventState(.JoyButtonUp, .Disable);
-		SDL2.SDL.EventState(.JoyDeviceAdded, .Disable);
-		SDL2.SDL.EventState(.JoyDeviceRemoved, .Disable);
-
 		MainWindow = new .(props);
 		Renderer = new .(MainWindow.[Friend]SDLWindow);
-
-		SDL.SetHint(SDL.SDL_HINT_RENDER_SCALE_QUALITY, "1");
-
-		SDLImage.Init(.PNG);
-		m_HasAudio = SDLMixer.OpenAudio(44100, SDLMixer.MIX_DEFAULT_FORMAT, 2, 4096) >= 0;
-
-		SDL.SetRenderDrawBlendMode(Renderer.[Friend]SDLRenderer, .Blend);
-
-		SDLTTF.Init();
+		AudioManager = new .();
 	}
 
 	internal static void Shutdown()
@@ -95,7 +94,18 @@ public static class Engine
 		m_Stopwatch.Start();
 #if BF_PLATOFRM_WASM
 #else
+
+#if ENGINE_SDL2
 		while (RunOneFrame()) {}
+#elif ENGINE_RAYLIB
+		RaylibBeef.Raylib.SetTargetFPS(60);
+		while (!RaylibBeef.Raylib.WindowShouldClose())
+		{
+			Input.[Friend]Poll();
+			Update();
+			Render();
+		}
+#endif
 #endif
 	}
 
@@ -117,6 +127,7 @@ public static class Engine
 			m_FPSStopwatch.Restart();
 		}
 
+#if ENGINE_SDL2
 		int32 waitTime = 1;
 		SDL.Event event;
 
@@ -127,9 +138,9 @@ public static class Engine
 			case .Quit:
 				return false;
 			case .KeyDown:
-				OnKeyPressed(event.key);
+				OnKeyPressed((KeyCode)event.key.keysym.scancode);
 			case .KeyUp:
-				OnKeyReleased(event.key);
+				OnKeyReleased((KeyCode)event.key.keysym.scancode);
 			case .MouseButtonDown:
 				OnMouseButtonPressed(event.button);
 			case .MouseButtonUp:
@@ -141,6 +152,7 @@ public static class Engine
 			
 			waitTime = 0;
 		}
+#endif
 
 		// Fixed 60 Hz update
 		double msPerTick = 1000 / 60.0;
@@ -176,7 +188,11 @@ public static class Engine
 
 		m_CurPhysTickCount = newPhysTickCount;
 
+#if ENGINE_SDL2
 		return true;
+#elif ENGINE_RAYLIB
+		return !RaylibBeef.Raylib.WindowShouldClose();
+#endif
 	}
 
 	private static void Update()
@@ -195,14 +211,14 @@ public static class Engine
 		m_App.OnDraw();
 	}
 
-	private static void OnKeyPressed(SDL2.SDL.KeyboardEvent key)
+	private static void OnKeyPressed(KeyCode key)
 	{
-		m_CurrentScene.[Friend]OnKeyPressed((KeyCode)key.keysym.scancode);
+		m_CurrentScene.[Friend]OnKeyPressed(key);
 	}
 
-	private static void OnKeyReleased(SDL2.SDL.KeyboardEvent key)
+	private static void OnKeyReleased(KeyCode key)
 	{
-		m_CurrentScene.[Friend]OnKeyReleased((KeyCode)key.keysym.scancode);
+		m_CurrentScene.[Friend]OnKeyReleased(key);
 	}
 
 	private static void OnMouseButtonPressed(SDL2.SDL.MouseButtonEvent button)

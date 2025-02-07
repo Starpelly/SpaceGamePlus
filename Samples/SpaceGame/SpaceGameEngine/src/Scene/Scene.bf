@@ -1,10 +1,12 @@
 using System.Collections;
+using SpaceGameEngine.Graphics;
 
 namespace SpaceGameEngine;
 
 public abstract class Scene
 {
 	public readonly List<Entity> Entities = new .() ~ DeleteContainerAndItems!(_);
+	public readonly Camera MainCamera = new .() ~ delete _;
 
 	protected abstract void OnLoad();
 	protected abstract void OnUnload();

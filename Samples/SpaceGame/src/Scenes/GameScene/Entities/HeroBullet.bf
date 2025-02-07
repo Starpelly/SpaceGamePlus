@@ -20,7 +20,7 @@ class HeroBullet : Entity
 					enemy.mHealth--;
 					
 					GameScene.Instance.ExplodeAt(X, Y, 0.25f, 1.25f);
-					gGameApp.PlaySound(Sounds.Explode, 0.5f, 1.5f);
+					Engine.PlaySound(Sounds.Explode, 0.5f, 1.5f);
 
 					break;
 				}

@@ -22,7 +22,7 @@ public class Background
 		public float Scale = 1.0f;
 		public float Speed = 0.0f;
 
-		public float SpriteAlpha = 0.5f;
+		public uint8 SpriteAlpha = 255;
 	}
 
 	public void Init()
@@ -39,7 +39,7 @@ public class Background
 				Scale = particleScale,
 				Speed = particleSpeed,
 
-				SpriteAlpha = Engine.Random.NextFloat(0.0f, 1.0f)
+				SpriteAlpha = (uint8)Engine.Random.Next(25, 255)
 			};
 			m_particles.Add(newParticle);
 		}
@@ -69,7 +69,7 @@ public class Background
 
 		for (let particle in m_particles)
 		{
-			Drawing.DrawImageEx(Images.sStar, particle.X, particle.Y, particle.Scale, particle.Scale, (uint8)(particle.SpriteAlpha * 255));
+			Drawing.DrawImageEx(Images.sStar, particle.X, particle.Y, particle.Scale, particle.Scale, particle.SpriteAlpha);
 		}
 	}
 }

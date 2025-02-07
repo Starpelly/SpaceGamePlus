@@ -1,7 +1,10 @@
 FileVersion = 1
-Dependencies = {corlib = "*", SDL2 = "*"}
+Dependencies = {corlib = "*", SDL2 = "*", raylib-beef = "*"}
 
 [Project]
 Name = "SpaceGameEngine"
 TargetType = "BeefLib"
 StartupObject = "SpaceGameEngine.Program"
+
+[Configs.Debug.Win64]
+PreprocessorMacros = ["DEBUG", "ENGINE_RAYLIB"]

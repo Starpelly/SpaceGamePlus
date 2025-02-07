@@ -10,37 +10,54 @@ public static class Drawing
 {
 	public static void DrawImage(Image image, float x, float y)
 	{
+#if ENGINE_SDL2
 		SDL2.SDL.Rect srcRect = .(0, 0, image.mWidth, image.mHeight);
 		SDL2.SDL.Rect destRect = .((int32)x, (int32)y, image.mWidth, image.mHeight);
 		SDL2.SDL.RenderCopy(Engine.Renderer.SDLRenderer, image.mTexture, &srcRect, &destRect);
+#elif ENGINE_RAYLIB
+		RaylibBeef.Raylib.DrawTextureEx(image.Texture, .(x, y), 0, 1, RaylibBeef.Raylib.WHITE);
+#endif
 	}
 
 	public static void DrawImage(Image image, float x, float y, float rot, float centerX, float centerY)
 	{
+#if ENGINE_SDL2
 		SDL2.SDL.Rect srcRect = .(0, 0, image.mWidth, image.mHeight);
 		SDL2.SDL.Rect destRect = .((int32)x, (int32)y, image.mWidth, image.mHeight);
 		SDL2.SDL.Point centerPoint = .((.)centerX, (.)centerY);
 		SDL2.SDL.RenderCopyEx(Engine.Renderer.SDLRenderer, image.mTexture, &srcRect, &destRect, rot, &centerPoint, .None);
+#elif ENGINE_RAYLIB
+		RaylibBeef.Raylib.DrawTextureEx(image.Texture, .(x - centerX, y - centerY), rot, 1, RaylibBeef.Raylib.WHITE);
+#endif
 	}
 
 	public static void DrawImageEx(Image image, float x, float y, float scaleX, float scaleY, uint8 alpha)
 	{
+#if ENGINE_SDL2
 		SDL2.SDL.SetTextureAlphaMod(image.mTexture, alpha);
 
 		SDL2.SDL.Rect srcRect = .(0, 0, image.mWidth, image.mHeight);
 		SDL2.SDL.FRect destRect = .(x, y, image.mWidth * scaleX, image.mHeight * scaleY);
 		SDL2.SDL.RenderCopyF(Engine.Renderer.SDLRenderer, image.mTexture, &srcRect, &destRect);
+#elif ENGINE_RAYLIB
+		RaylibBeef.Raylib.DrawTextureEx(image.Texture, .(x, y), 0, scaleX, .(255, 255, 255, alpha));
+#endif
 	}
 
 	public static void DrawImageRec(Image image, Rect srcRect, Rect destRect)
 	{
+#if ENGINE_SDL2
 		SDL2.SDL.Rect srcRectSDL = srcRect;
 		SDL2.SDL.Rect destRectSDL = destRect;
 		SDL2.SDL.RenderCopy(Engine.Renderer.SDLRenderer, image.mTexture, &srcRectSDL, &destRectSDL);
+#elif ENGINE_RAYLIB
+		RaylibBeef.Raylib.DrawTexturePro(image.Texture, .(srcRect.x, srcRect.y, srcRect.width, srcRect.height), .(destRect.x, destRect.y, destRect.width, destRect.height), .(0, 0), 0, RaylibBeef.Raylib.WHITE);
+#endif
 	}
 
 	public static void DrawString(Font font, float x, float y, String str, Color color, bool centerX = false)
 	{
+#if ENGINE_SDL2
 		var x;
 		if (font.mBMFont != null)
 		{
@@ -95,5 +112,6 @@ public static class Drawing
 			SDL2.SDL.DestroyTexture(texture);
 #endif
 		}
+#endif
 	}
 }

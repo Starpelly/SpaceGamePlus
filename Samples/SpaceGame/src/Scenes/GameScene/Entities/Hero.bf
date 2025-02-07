@@ -66,7 +66,7 @@ class Hero : Entity
 		if (mHealth < 0)
 		{
 			GameScene.Instance.ExplodeAt(X, Y, 1.0f, 0.5f);
-			gGameApp.PlaySound(Sounds.Explode, 1.2f, 0.6f);
+			Engine.PlaySound(Sounds.Explode, 1.2f, 0.6f);
 			GameScene.Instance.mDifficulty = 0;
 
 			mHealth = 1;
@@ -80,14 +80,14 @@ class Hero : Entity
 		float deltaX = 0;
 		float deltaY = 0;
 		float moveSpeed = Hero.MOVE_SPEED;
-		if (Input.IsKeyDown(.Left))
+		if (Input.IsKeyDown(.LeftArrow))
 			deltaX -= moveSpeed;
-		if (Input.IsKeyDown(.Right))
+		if (Input.IsKeyDown(.RightArrow))
 			deltaX += moveSpeed;
 
-		if (Input.IsKeyDown(.Up))
+		if (Input.IsKeyDown(.UpArrow))
 			deltaY -= moveSpeed;
-		if (Input.IsKeyDown(.Down))
+		if (Input.IsKeyDown(.DownArrow))
 			deltaY += moveSpeed;
 
 		if ((deltaX != 0) || (deltaY != 0))
@@ -107,7 +107,7 @@ class Hero : Entity
 			bullet.Y = Y - 50;
 			GameScene.Instance.AddEntity(bullet);
 
-			gGameApp.PlaySound(Sounds.RandomShot, Engine.Random.NextFloat(0.085f, 0.1f));
+			Engine.PlaySound(Sounds.RandomShot, Engine.Random.NextFloat(0.085f, 0.1f));
 		}
 
 		if (mHasMoved && mHasShot)

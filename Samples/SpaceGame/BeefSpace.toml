@@ -1,5 +1,5 @@
 FileVersion = 1
-Projects = {SpaceGame = {Path = "."}, SDL2 = "*", SpaceGameEngine = {Path = "SpaceGameEngine"}}
+Projects = {SpaceGame = {Path = "."}, SDL2 = "*", SpaceGameEngine = {Path = "SpaceGameEngine"}, raylib-beef = {Path = "vendor/raylib-beef"}}
 Unlocked = ["SDL2"]
 ExtraPlatforms = ["wasm32"]
 

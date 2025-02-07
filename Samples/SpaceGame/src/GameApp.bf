@@ -3,6 +3,7 @@ using System.Collections;
 using System.Diagnostics;
 using SpaceGameEngine;
 using SpaceGameEngine.Graphics;
+using SpaceGameEngine.Audio;
 
 namespace SpaceGame;
 
@@ -113,16 +114,5 @@ class GameApp : App
 	public static void Test2()
 	{
 		Test.FatalError("Test 2 Failed");
-	}
-	
-	public void PlaySound(SDL2.Sound sound, float volume = 1.0f, float pan = 0.5f)
-	{
-		if (sound == null)
-			return;
-
-		int32 channel = SDL2.SDLMixer.PlayChannel(-1, sound.mChunk, 0);
-		if (channel < 0)
-			return;
-		SDL2.SDLMixer.Volume(channel, (int32)(volume * 128));
 	}
 }

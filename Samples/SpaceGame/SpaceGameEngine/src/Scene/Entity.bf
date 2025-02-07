@@ -1,16 +1,6 @@
 using SpaceGameEngine.Math;
 namespace SpaceGameEngine;
 
-public interface IOnKeyPressed
-{
-	void OnKeyPressed(KeyCode keyCode);
-}
-
-public interface IOnKeyReleased
-{
-	void OnKeyReleased(KeyCode keyCode);
-}
-
 public class Entity
 {
 	public Vector2 Position;

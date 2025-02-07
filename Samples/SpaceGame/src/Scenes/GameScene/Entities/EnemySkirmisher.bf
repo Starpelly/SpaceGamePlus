@@ -81,7 +81,7 @@ class EnemySkirmisher : Enemy
 	private void explode()
 	{
 		GameScene.Instance.ExplodeAt(X, Y, 0.6f, 1.2f);
-		gGameApp.PlaySound(Sounds.Explode, 0.7f, 1.2f);
+		Engine.PlaySound(Sounds.Explode, 0.7f, 1.2f);
 		GameScene.Instance.mScore += 50;
 		IsDeleting = true;
 	}

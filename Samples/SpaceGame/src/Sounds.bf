@@ -1,8 +1,8 @@
 using System;
-using SDL2;
 using System.Collections;
 
 using SpaceGameEngine;
+using SpaceGameEngine.Audio;
 
 namespace SpaceGame;
 
